@@ -1,0 +1,296 @@
+/* bryanbar.com — landing page styles.
+   Mobile-first: base rules target small screens; one min-width breakpoint widens them. */
+
+:root {
+  color-scheme: light dark;
+
+  /* Light palette (default). Dark overrides live in the media query below. */
+  --bg:        #f4f2ed;
+  --bg-raised: #fffefb;
+  --ink:       #1c1a17;
+  --ink-soft:  #56514a;
+  --rule:      #d9d4c9;
+  --accent:    #b8560f;   /* construction orange */
+  --accent-in: #ffffff;   /* text on accent */
+  --hazard:    #e0a92b;   /* caution yellow */
+  --blueprint: #2d4a63;
+
+  /* Sketch ramps. Each roster in the construction sketch is painted from a
+     gradient between these two endpoints, keyed to the piece's index, so a
+     reshuffled tower reads as out of order without the viewer having to
+     remember which colour is which.
+
+     COLOUR IS NOT THE ONLY CHANNEL, and these tokens are not the whole story.
+     Each girder is a steel plate with one LETTER of "bryanbar" cut out of it,
+     and the letter is what identifies the piece at small render sizes — an
+     index stripe used to do that job and was removed when the knockout took
+     its place on the face of the plate. So retuning these lightnesses cannot
+     break the reading outright.
+
+     WHAT THE RAMP STILL HAS TO DO, and it is not decoration: b, r and a each
+     appear TWICE in the word, so two plates can carry the same letter and the
+     ramp step is the only thing that tells them apart. Keep the eight steps
+     spread across the full range. (Colour-vision deficiency needs no help
+     here: both ramps are hue-locked and move only in lightness, which is why
+     they are ramps.)
+
+     PURE VALUE RAMPS: both endpoints of a pair share a hue and a saturation
+     and differ only in lightness (girders hsl(207 40% 69%..34%), pipes
+     hsl(40 20% 82.5%..32%)), so the sketch's HSL interpolation introduces no
+     hue that is not already here — nothing can drift toward --accent or
+     --hazard, which identify different things. Keep that property if you
+     retune: change the lightnesses, not the hue or the saturation.
+
+     WHY THE DEEP END STOPS WHERE IT DOES. The sketch inks each step's outline,
+     bolt holes and the cut edge around its letter in the same hue, always
+     DARKER than the step, at a fixed contrast ratio. Ink that flipped to pale
+     on the deep steps would make those pieces read LIGHTER than the mid ones
+     and the ordering the ramp exists to show would invert — a measured
+     failure, not a worry. Ink that stays on one side keeps the order; the
+     price is that the deep end can go no darker than dark ink can still be
+     seen against. Push --girder-hi below about 34% lightness and the cut edge
+     starts to disappear. */
+  --girder-lo: #90b3d0;   /* plate 0, the first 'b' — pale steel   */
+  --girder-hi: #345a79;   /* plate N-1, the last 'r' — deep slate  */
+  --pipe-lo:   #dbd5c9;   /* pipe 0 — light stone    */
+  --pipe-hi:   #625741;   /* pipe NP-1 — dark stone  */
+
+  --pad: 1rem;
+  --radius: 10px;
+  --tap: 44px;            /* minimum touch target */
+  --measure: 62ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:        #14171a;
+    --bg-raised: #1c2024;
+    --ink:       #e8e6e1;
+    --ink-soft:  #a3a09a;
+    --rule:      #2e343a;
+    --accent:    #ff8b3d;
+    --accent-in: #14171a;
+    --hazard:    #f0bd45;
+    --blueprint: #7fb0d6;
+
+    /* The ramps run the same way round — index 0 pale, last index deep — so a
+       piece keeps its place in the order across a theme flip. Both ends are
+       pulled toward the light here because the deep end has to stay off the
+       dark canvas as well as hold its dark lattice: hsl(207 42% 88%..37.5%)
+       and hsl(40 16% 82%..36%), the deepest step of each still clearing 2.6:1
+       against --bg-raised. */
+    --girder-lo: #d4e2ed;
+    --girder-hi: #376488;
+    --pipe-lo:   #d8d4ca;
+    --pipe-hi:   #6a614d;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+        "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--accent); }
+
+:where(a, button):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------- banner --
+   Announces that the visitor arrived via a redirect, or is being served from
+   a non-canonical endpoint. Populated by assets/site.js; hidden until then. */
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.7rem var(--pad);
+  background: var(--hazard);
+  color: #1c1a17;               /* fixed dark ink: hazard yellow is light in both themes */
+  border-bottom: 2px solid rgba(0, 0, 0, 0.28);
+  font-size: 0.9rem;
+}
+
+.banner[hidden] { display: none; }
+
+.banner__text { margin: 0; flex: 1 1 auto; }
+
+.banner__text code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: rgba(0, 0, 0, 0.14);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  /* A hostname from ?from= is untrusted text — keep a long one from breaking layout. */
+  overflow-wrap: anywhere;
+}
+
+.banner__close {
+  flex: 0 0 auto;
+  min-width: var(--tap);
+  min-height: var(--tap);
+  margin: -0.5rem -0.4rem -0.5rem 0;
+  background: none;
+  border: 0;
+  color: inherit;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.banner__close:hover { background: rgba(0, 0, 0, 0.12); }
+
+/* ---------------------------------------------------------------- header -- */
+
+.site-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: var(--pad);
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg-raised);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.brand__dot { color: var(--accent); }
+
+.nav__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding: 0 0.85rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.nav__link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------- content -- */
+
+.main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.75rem var(--pad);
+}
+
+.hero { width: 100%; max-width: 60rem; text-align: center; }
+
+.hero__title {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.7rem, 6vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.hero__sub {
+  margin: 0 auto 1.5rem;
+  max-width: var(--measure);
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
+/* Canvas host. p5 sizes the canvas to THIS element's box, so the aspect ratio
+   here is what drives the sketch's dimensions on every screen. */
+.sketch {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  max-height: 60vh;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  overflow: hidden;
+  position: relative;
+}
+
+.sketch canvas { display: block; width: 100%; height: 100%; }
+
+/* Shown only if the p5 CDN fails to load — see site.js. */
+.sketch__fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad);
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  text-align: center;
+  background: repeating-linear-gradient(
+    45deg, transparent 0 18px, color-mix(in srgb, var(--hazard) 45%, transparent) 18px 36px
+  );
+}
+
+/* --------------------------------------------------------------- footer -- */
+
+.site-footer {
+  padding: var(--pad);
+  border-top: 1px solid var(--rule);
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.site-footer code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* ----------------------------------------------------------- breakpoint -- */
+
+@media (min-width: 40rem) {
+  .site-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--pad) 1.5rem;
+  }
+  .main { padding: 3rem 1.5rem; }
+  .sketch { aspect-ratio: 16 / 9; }
+}
+
+/* Users who ask for less motion get a still frame; site.js also stops the loop. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
