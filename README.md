@@ -7,26 +7,23 @@ same site, reached by a redirect.
 ## Layout
 
 ```
-src/                 everything that gets published
-  index.html         the page
-  404.html           not-found page
-  assets/
-    style.css        tokens, layout, both themes
-    site.js          navigation and the redirect banner
-    sketch.js        the construction scene
-  .nojekyll          skip Jekyll processing
-  CNAME              custom domain, inside the artifact
-.github/workflows/
-  pages.yml          publishes src/ to Pages
+index.html           the page
+404.html             not-found page
+assets/
+  style.css          tokens, layout, both themes
+  site.js            navigation and the redirect banner
+  sketch.js          the construction scene
+.nojekyll            skip Jekyll processing
+CNAME                custom domain
 ```
 
 ## Running it locally
 
 ```bash
-cd src && python3 -m http.server 8000
+python3 -m http.server 8000
 ```
 
-Then <http://localhost:8000/>. Opening `src/index.html` straight off disk also
+Then <http://localhost:8000/>. Opening `index.html` straight off disk also
 works — that is why configuration lives in a `.js` file rather than a `.json`
 one fetched at runtime, since `fetch()` of a local file is blocked by CORS under
 `file://`.
@@ -40,14 +37,9 @@ Two things that will otherwise waste your time:
 
 ## How it is published
 
-Pages' branch source can only serve `/ (root)` or `/docs` — there is no
-arbitrary-folder option — so `src/` is published by the Actions workflow in
-`.github/workflows/pages.yml`. Set **Settings → Pages → Source** to **GitHub
-Actions**. Actions minutes are free for public repositories, and this route also
-avoids the ten-builds-per-hour limit that applies to branch builds.
-
-`CNAME` exists twice on purpose: at the repo root, and inside `src/` so it ends
-up in the deployed artifact.
+Served straight from the repository root: **Settings → Pages → Source**, the
+`dev` branch, `/ (root)`. Pages' branch source only offers `/ (root)` or
+`/docs`, so anything else would need an Actions workflow; the root needs none.
 
 ## The scene
 
