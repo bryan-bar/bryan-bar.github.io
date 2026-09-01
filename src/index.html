@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>bryanbar.com</title>
+<meta name="description" content="Personal site of bryan bar — developer. Under construction.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect width='16' height='16' rx='3' fill='%23b8560f'/><path d='M3 11h10M5 11V6l3-2 3 2v5' stroke='%23fff' stroke-width='1.4' fill='none'/></svg>">
+<!-- Relative asset paths: this page lives at the site root, and relative paths
+     also keep it working when opened straight off disk via file://. -->
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div id="origin-banner" class="banner" hidden>
+  <p class="banner__text"></p>
+  <button class="banner__close" type="button" aria-label="Dismiss this notice">&times;</button>
+</div>
+
+<header class="site-header">
+  <a class="brand" href="/">Bryan<span class="brand__dot">Bar</span></a>
+  <nav class="nav" aria-label="Main">
+    <ul id="nav-list" class="nav__list"></ul>
+  </nav>
+</header>
+
+<main class="main">
+  <section class="hero">
+    <h1 class="hero__title">Under construction</h1>
+    <p class="hero__sub">
+      Something is being built here. In the meantime, the code is on GitHub.
+    </p>
+    <div id="sketch-holder" class="sketch" role="img"
+         aria-label="Animation of a tower crane stacking steel girders on a construction site."></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>bryanbar.com — also reachable at <code>bryan-bar.com</code></p>
+</footer>
+
+<script src="assets/site.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/2.3.2/p5.min.js"
+        integrity="sha512-ng/OAtMqIV4Mbny+ffpcazmh1ll3TVgauAzXXgA+41oiZUDQd7i3NU8W6jqo1Ab6hlKdkPyxPIiceff2QfMbTg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+<script src="assets/sketch.js" defer></script>
+
+</body>
+</html>
